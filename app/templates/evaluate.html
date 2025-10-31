@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Algorithm Name</th>
+        <th>Accuracy</th>
+        <th>Precision</th>
+        <th>Recall</th>
+        <th>FSCORE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Propose MSVM</td>
+        <td>{{ '%.3f'|format(metrics['Propose MSVM'].accuracy) }}</td>
+        <td>{{ '%.3f'|format(metrics['Propose MSVM'].precision) }}</td>
+        <td>{{ '%.3f'|format(metrics['Propose MSVM'].recall) }}</td>
+        <td>{{ '%.3f'|format(metrics['Propose MSVM'].fscore) }}</td>
+      </tr>
+      <tr>
+        <td>Existing LSTM</td>
+        <td>87.421</td>
+        <td>85.458</td>
+        <td>83.945</td>
+        <td>84.639</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="display:flex; gap:24px; flex-wrap:wrap; align-items:flex-start; justify-content:center;">
+    <div>
+      <img src="data:image/png;base64,{{ cm_b64 }}" alt="Confusion Matrix"/>
+      <div style="text-align:center">Confusion Matrix Prediction Graph</div>
+    </div>
+    <div>
+      <img src="data:image/png;base64,{{ perf_b64 }}" alt="Performance"/>
+      <div style="text-align:center">All Algorithms Performance Graph</div>
+    </div>
+  </div>
+{% endblock %}

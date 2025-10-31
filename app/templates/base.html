@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Fake News Detection System Using Featured-Based Optimized MSVM Classification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+  <body>
+    <div class="header">Fake News Detection System Using Featured-Based Optimized MSVM Classification</div>
+    <div class="navbar">
+      <a href="{{ url_for('index') }}">Home</a>
+      {% if session.get('username') %}
+        <a href="{{ url_for('load_fake_news') }}">Load Fake News</a>
+        <a href="{{ url_for('features') }}">Run MPCA & Firefly Features Selection</a>
+        <a href="{{ url_for('train') }}">Run MSVM Algorithm</a>
+        <a href="{{ url_for('predict') }}">Predict News</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}">User Login Here</a>
+        <a href="{{ url_for('signup') }}">New User Signup Here</a>
+      {% endif %}
+    </div>
+
+    <div class="container">
+      <div class="hero">FAKE NEWS</div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </body>
+</html>

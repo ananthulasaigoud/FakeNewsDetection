@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div style="text-align:center">
+    <p>Total records found in Dataset = {{ stats.total_records }}</p>
+    <p>Total features found in Dataset = {{ stats.total_features_found }}</p>
+    <p>Total features extracted using MPCA = {{ stats.features_extracted }}</p>
+    <p>Total features selected using Firefly-MSVM Optimization = {{ stats.features_selected }}</p>
+
+    <p>Dataset Train & Test Split Details
+      80% dataset records using to train Algorithms = {{ stats.train_records }}
+      <br>20% dataset records using to test Algorithms = {{ stats.test_records }}</p>
+  </div>
+{% endblock %}

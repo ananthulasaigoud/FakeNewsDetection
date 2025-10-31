@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>News</th>
+        <th>target</th>
+        <th>image-path</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+        <tr>
+          <td>{{ r.news }}</td>
+          <td>{{ r.target }}</td>
+          <td>{{ r.image_path }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

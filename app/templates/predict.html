@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2 class="section">Predict News</h2>
+  <form method="post">
+    <div class="form-row">Enter News Text</div>
+    <textarea name="text" rows="6"></textarea><br>
+    <input type="submit" value="Predict">
+  </form>
+
+  {% if result %}
+    <h3>Result: {{ result.label }} (confidence {{ result.prob }})</h3>
+  {% endif %}
+{% endblock %}

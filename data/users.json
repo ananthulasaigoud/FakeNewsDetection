@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "username": "sai",
+      "salt": "63b6c72fb87c171d9544acda58377fcc",
+      "password_hash": "fcafb5c609fea86dcafdf4fc474a402921ade4bd60419fa24d36499f1a8c9abb",
+      "contact": "6305579139",
+      "email": "saigoud17092003@gmail.com",
+      "address": "aipoor"
+    }
+  ]
+}

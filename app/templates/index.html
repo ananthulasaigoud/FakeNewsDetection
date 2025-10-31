@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2 class="section">Fake News Detection</h2>
+  <p style="text-align:center">Welcome{% if session.get('username') %} {{ session.get('username') }}{% endif %}. Use the menu above to navigate.</p>
+{% endblock %}
