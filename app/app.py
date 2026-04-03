@@ -1,13 +1,10 @@
 import os
-import io
 import base64
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from .auth import create_user, verify_user, get_user
+from .auth import create_user, verify_user
 from .ml.model import (
-    load_dataset,
     save_uploaded_dataset,
     is_dataset_uploaded,
-    feature_selection_placeholder,
     train_and_evaluate,
     predict_text,
     get_training_stats,
