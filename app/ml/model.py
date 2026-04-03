@@ -104,7 +104,7 @@ def _prepare() -> None:
     global _X_train, _X_test, _y_train, _y_test
     rows = load_dataset()
     X = [r["news"] for r in rows]
-    y = [1 if r["target"].upper() == "REAL" else 0 for r in rows]  # REAL=1, FAKE=0
+    y = [1 if r["target"].upper() in ("REAL", "TRUE", "1", "YES") else 0 for r in rows]  # Handle multiple label types
     # Guard against exceedingly small datasets that fail train_test_split stratify
     stratify_target = y if len(y) > 10 else None
     _X_train, _X_test, _y_train, _y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=stratify_target)
