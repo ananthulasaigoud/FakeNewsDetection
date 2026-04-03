@@ -1,21 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>News</th>
-        <th>target</th>
-        <th>image-path</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in records %}
-        <tr>
-          <td>{{ r.news }}</td>
-          <td>{{ r.target }}</td>
-          <td>{{ r.image_path }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<h2 class="section">Load Fake News Dataset</h2>
+
+<div class="form-container">
+  <form method="post" enctype="multipart/form-data">
+    <div class="form-row">
+      <label for="csv_file">Select CSV File:</label><br>
+      <input type="file" name="csv_file" id="csv_file" accept=".csv" required>
+    </div>
+    <input type="submit" value="Upload and Load Data">
+  </form>
+</div>
+
+{% if records %}
+<h3 style="text-align: center; margin-top: 30px;">Loaded Data (Showing first 50 records)</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>News</th>
+      <th>Target</th>
+      <th>Image Path</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in records %}
+    <tr>
+      <td>{{ r.news }}</td>
+      <td>{{ r.target }}</td>
+      <td>{{ r.image_path }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p style="text-align: center; margin-top: 30px; color: #666; font-size: 16px;">Upload a CSV file to view data</p>
+{% endif %}
 {% endblock %}

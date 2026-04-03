@@ -5,6 +5,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from .auth import create_user, verify_user, get_user
 from .ml.model import (
     load_dataset,
+    save_uploaded_dataset,
+    is_dataset_uploaded,
     feature_selection_placeholder,
     train_and_evaluate,
     predict_text,
@@ -15,6 +17,10 @@ from .ml.model import (
 def create_app() -> Flask:
     app = Flask(__name__, template_folder="templates", static_folder="static")
     app.secret_key = os.environ.get("APP_SECRET", "dev-secret-key")
+
+    @app.context_processor
+    def inject_dataset_status():
+        return {"dataset_uploaded": is_dataset_uploaded()}
 
     @app.route("/")
     def index():
@@ -64,17 +70,68 @@ def create_app() -> Flask:
             return redir
         return render_template("dashboard.html", username=session.get("username"))
 
-    @app.route("/load")
+    @app.route("/load", methods=["GET", "POST"])
     def load_fake_news():
         if (redir := require_login()) is not None:
             return redir
-        records = load_dataset()
-        return render_template("load.html", records=records[:50])
+        
+        records = []
+        if request.method == "POST":
+            # Check if a file was uploaded
+            if 'csv_file' not in request.files:
+                flash("No file selected", "error")
+                return render_template("load.html", records=records)
+            
+            file = request.files['csv_file']
+            
+            # Check if file has a filename
+            if file.filename == '':
+                flash("No file selected", "error")
+                return render_template("load.html", records=records)
+            
+            # Check if file is CSV
+            if not file.filename.endswith('.csv'):
+                flash("Please upload a CSV file", "error")
+                return render_template("load.html", records=records)
+            
+            try:
+                # Read the CSV file
+                import csv
+                from io import StringIO
+                
+                # Read file content as text
+                stream = StringIO(file.stream.read().decode("UTF8"), newline=None)
+                csv_reader = csv.DictReader(stream)
+                
+                # Convert to list of dictionaries
+                for row in csv_reader:
+                    image_path = row.get("image-path") or row.get("image_path") or ""
+                    records.append({
+                        "news": row.get("news", ""),
+                        "target": row.get("target", ""),
+                        "image_path": image_path
+                    })
+                
+                # Save uploaded dataset so feature selection uses it
+                save_uploaded_dataset(records)
+                
+                flash(f"Successfully loaded {len(records)} records from CSV file", "success")
+                return render_template("load.html", records=records[:50])
+            
+            except Exception as e:
+                flash(f"Error reading CSV file: {str(e)}", "error")
+                return render_template("load.html", records=records)
+        
+        # GET request - show empty upload form
+        return render_template("load.html", records=[])
 
     @app.route("/features")
     def features():
         if (redir := require_login()) is not None:
             return redir
+        if not is_dataset_uploaded():
+            flash("Please upload a dataset first before running feature selection.", "error")
+            return redirect(url_for("load_fake_news"))
         stats = get_training_stats()
         return render_template("train.html", stats=stats)
 
@@ -82,6 +139,9 @@ def create_app() -> Flask:
     def train():
         if (redir := require_login()) is not None:
             return redir
+        if not is_dataset_uploaded():
+            flash("Please upload a dataset first before running the algorithm.", "error")
+            return redirect(url_for("load_fake_news"))
         metrics, cm_img, perf_img = train_and_evaluate()
         cm_b64 = base64.b64encode(cm_img.getvalue()).decode("utf-8")
         perf_b64 = base64.b64encode(perf_img.getvalue()).decode("utf-8")
